@@ -3,11 +3,10 @@ module: Module_01
 component: Component_01 in Module_01
 eternal: a in Component_01, b in Component_01, c in Component_01
 components: a, b, c
-note: param1="Value 1", param2
 
-feature "Message Statements"
+feature "LTE-IMSI based Attach"
 
-"Message" : a -> b  (* A simple message exchange, to test if multiline function could be execute automaticly. *)
+"Message Request" : a -> b  (* A simple message exchange, to test if multiline function could be execute automaticly. *)
 "Message Reply": a <- b  (* Reply to the message. *)
 "Message With Parameters" (param1, param2) : b -> c (* Parameters can be specified with messages. *)
 "Bold Message" : b <- c  (* Message shown with a thick arrow. *)
@@ -20,5 +19,7 @@ feature "Message Statements"
 "msg10" : a -> b  (* Message shown with a thick arrow. *)
 "msg11" : b -> c  (* Message shown with a thick arrow. *)
 "msg12" : b <- c  (* Message shown with a thick arrow. *)
+"msg13" : a -> b  (* Message shown with a thick arrow. *)
+"msg14" : b -> c  (* Message shown with a thick arrow. *)
 
 endfeature

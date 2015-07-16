@@ -1,24 +1,31 @@
-
 import re
-from SdObject import *   
 from SdMessage import * 
 
 class SdParser:
 
     def __init__(self, fileName):
+        self.featureName = []       
         self.objList = []
-        self.msgList = []       
+        self.msgList = []
 
     def transEachLine(self, line):
+        #feature "CaseName-1-2"
+        sdName = re.compile(r"feature\s*\".*\"")
+        matchComp1 = sdName.search(line)
+        if matchComp1:
+            targetStr = matchComp1.group().strip("\"").strip("feature")
+            strIndex = targetStr.index("\"")
+            self.featureName = targetStr[(strIndex+1):]
+
         #components: a, b, c
-        comps = re.compile("^components:\s*(\w)[,\s*(\w)]*")
-        matchComp = comps.search(line)
-        if matchComp:
-            tempObjList1 = matchComp.group().strip("components:").strip("\n")
+        comps = re.compile(r"^components:\s*(\w)[,\s*(\w)]*")
+        matchComp2 = comps.search(line)
+        if matchComp2:
+            tempObjList1 = matchComp2.group().strip("components:").strip("\n")
             tempObjList2 = tempObjList1.split(',')
             for i in range(len(tempObjList2)):
                 self.objList.append(tempObjList2[i].strip(" "))
-            print self.objList
+            #print self.objList
 
         #"Message" : a -> b  (* A simple message exchange *)
         item1 = re.compile(r"^\"\w+[\s*\w*]*\"")
@@ -26,7 +33,7 @@ class SdParser:
         tempList = ""
         if matchMsg1:
             tempList = matchMsg1.group().strip("\"")
-            print "Msg is: ", tempList
+            #print "Msg is: ", tempList
 
         item2 = re.compile(r"\(\w+[,\s*\w*]*\)")
         matchMsg2 = item2.search(line)
@@ -43,18 +50,17 @@ class SdParser:
         matchMsg3 = item3.search(line)
         if matchMsg3:
             tempList3 = matchMsg3.groups()
-            print "MessageSequence: ", tempList3
+            #print "MessageSequence: ", tempList3
 
             if (len(tempList3) == 3):
                 a = tempList3[0]
                 b = tempList3[2]
 
                 if (cmp(tempList3[1], '->') == 0):
-                    print ''
                     self.msgList.append((a,b,tempList, msgDetail))
                 else:
                     self.msgList.append((b,a,tempList, msgDetail))
-            print self.msgList
+            #print self.msgList
         
         #print matchMsg1, matchMsg2, matchMsg3, matchMsg4
 
